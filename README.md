@@ -25,6 +25,8 @@ model = nn.DataParallel(model.cuda(), device_ids=gpus, output_device=gpus[0])
 
 （5）一台机器上有多张卡的情况下，只需更改gpus的id列表即可指定规定GPU训练，如gpus=[3,4,5,6,7]表示指定第3，4，5，6，7块GPU训练；
 
+（6）DataParallel工具是单进程控制多个GPU，在训练时可以发现每次输出只有一行（每10次迭代输出一次精度）；
+
 训练代码如下保存为datapallel.py，关键代码部分如下：
 
 ```python
