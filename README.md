@@ -47,3 +47,50 @@ def main_work(gpus,args):
 
 2.torch.distributed
 
+​    与nn.DataParallel一个进程控制多块GPU不一样，torch.distributed是多个进程，每个进程控制一块GPU。在 API 层面，pytorch 为我们提供了 torch.distributed.launch 启动器，用于在命令行分布式地执行 python 文件。在执行过程中，启动器会将当前进程的（其实就是 GPU的）index 通过参数传递给 python，可以写一个测试脚本获得当前进程的 index：
+
+```python
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--local_rank', default=-1, type=int,
+                    help='node rank for distributed training')
+args = parser.parse_args()
+print(args.local_rank)
+```
+
+测试指令：
+
+```
+CUDA_VISIBLE_DEVICES=0,1,2,3 python -m torch.distributed.launch --nproc_per_node=4 test.py
+CUDA_VISIBLE_DEVICES=0,1,2 python -m torch.distributed.launch --nproc_per_node=3 test.py
+CUDA_VISIBLE_DEVICES=1,2 python -m torch.distributed.launch --nproc_per_node=2 test.py 
+python test.py
+```
+
+输出：
+
+```
+2
+1
+3
+0
+```
+
+```
+2
+1
+0
+```
+
+```
+0
+1
+```
+
+```
+-1
+```
+
+除了第四个指令，其余的输出是进程号随机的排列，所以--local_rank实际上就是启动器传递给python的当前进程的（其实就是 GPU的）index。
+
