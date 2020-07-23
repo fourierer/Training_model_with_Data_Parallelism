@@ -19,12 +19,13 @@ import torch.utils.data.distributed
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
+#os.environ["CUDA_VISIBLE_DEVICES"] = '0,1,2,3'
 
 model_names = sorted(name for name in models.__dict__
                      if name.islower() and not name.startswith("__") and callable(models.__dict__[name]))
 
 parser = argparse.ArgumentParser(description='PyTorch ImageNet Training')
-parser.add_argument('--data', metavar='DIR', default='/home/zhangzhi/Data/ImageNet2012', help='path to dataset')
+parser.add_argument('--data', metavar='DIR', default='/data/mhy/imagenet', help='path to dataset')
 parser.add_argument('-a',
                     '--arch',
                     metavar='ARCH',
@@ -41,7 +42,7 @@ parser.add_argument('--epochs', default=90, type=int, metavar='N', help='number 
 parser.add_argument('--start-epoch', default=0, type=int, metavar='N', help='manual epoch number (useful on restarts)')
 parser.add_argument('-b',
                     '--batch-size',
-                    default=3200,
+                    default=256,
                     type=int,
                     metavar='N',
                     help='mini-batch size (default: 3200), this is the total '
@@ -84,8 +85,8 @@ def main():
                       'which can slow down your training considerably! '
                       'You may see unexpected behavior when restarting '
                       'from checkpoints.')
-
-    main_worker(args.local_rank, 4, args)
+    ngpus_per_node = torch.cuda.device_count()
+    main_worker(args.local_rank, ngpus_per_node, args)
 
 
 def main_worker(gpu, ngpus_per_node, args):

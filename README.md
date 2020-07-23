@@ -482,3 +482,21 @@ def main_worker(gpu, ngpus_per_node, args):
     criterion = nn.CrossEntropyLoss().cuda(args.gpu)
 ```
 
+运行指令：
+
+```shell
+CUDA_VISIBLE_DEVICES=0,3 python main_pytorch.py
+```
+
+或者直接在脚本中添加：
+
+```python
+os.environ["CUDA_VISIBLE_DEVICES"] = '0,3'
+```
+
+然后直接python main_pytorch.py
+
+
+
+
+
