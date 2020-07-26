@@ -304,7 +304,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '0,1,2,3'
 
 ​    这部分直接介绍pytorch官方给出的训练代码main_pytorch.py，链接（ https://github.com/pytorch/examples/blob/master/imagenet/main.py ）。这个脚本是为了集群训练而写的，功能非常强大，由于本人没有多个服务器做尝试，这里利用该脚本做个单机多卡的训练。
 
-使用main_pytorch.py脚本做单机多卡训练，阅读代码可以发现实际上是第一部分单机多卡训练中nn.distributed和torch.multiprocesing两个工具的结合体。
+使用main_pytorch.py脚本做单机多卡训练，阅读代码可以发现实际上是第一部分单机多卡训练中nn.DataParallel,nn.distributed和torch.multiprocesing三个工具的结合体，通过设置参数达到选择的目的。
 
 给出主要代码部分：
 
@@ -496,7 +496,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '0,3'
 
 然后直接python main_pytorch.py
 
-
+这样不设置任何的参数，实际上默认的是采用torch.dataparallel这个工具来训练。
 
 
 
