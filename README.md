@@ -59,7 +59,7 @@ def main_work(gpus,args):
       optimizer.step()
 ```
 
-运行治疗较简单：
+运行指令较简单：
 
 ```
 python dataparallel.py
